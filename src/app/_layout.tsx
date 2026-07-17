@@ -20,7 +20,7 @@ export default function RootLayout() {
         <Stack.Screen name="login" />
         <Stack.Screen name="dashboard" />
         <Stack.Screen
-          name="beli-emas"
+          name="buy-gold"
           options={{ animation: "slide_from_right" }}
         />
       </Stack>

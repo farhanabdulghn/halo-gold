@@ -19,22 +19,26 @@ tidak diimplementasikan**.
 
 - **Expo Router** (file-based routing) — `src/app/_layout.tsx`, `login.tsx`,
   `dashboard.tsx`, `buy-gold.tsx`.
-- **React Context** untuk state management, dipisah per domain agar clean dan
+- **Zustand** untuk state management, dipisah per domain agar clean dan
   mudah di-test:
-  - `src/context/auth-context.tsx` — status login, mock `login()`/`logout()`.
-  - `src/context/gold-context.tsx` — saldo emas, harga realtime (simulasi),
-    dan aksi `buyGold(nominal)` yang mengunci harga saat transaksi (mirip
-    FR-012 "Lock harga").
+  - `src/store/auth-store.ts` — status login (`isAuthenticated`, `userEmail`),
+    serta aksi `login()` (mock, dengan delay untuk simulasi network call dan
+    validasi email/kata sandi) dan `logout()`.
+  - `src/store/gold-store.ts` — saldo emas (`balanceGram`), harga realtime
+    (`pricePerGram`, di-tick otomatis tiap 5 detik lewat `startGoldPriceTicker`),
+    dan aksi `buyGold(nominal)` yang mengunci harga saat transaksi dijalankan
+    (mirip FR-012 "Lock harga").
 - **Route guard**: `dashboard.tsx` dan `buy-gold.tsx` melakukan redirect ke
   `/login` bila user belum login (lihat penggunaan `<Redirect />` dari
-  `expo-router`).
+  `expo-router`). Guard dipanggil setelah semua hooks selesai dieksekusi agar
+  urutan hooks tetap konsisten di setiap render.
 - `src/utils/format.ts` — helper format Rupiah & gram, dipakai bersama di
   seluruh halaman (DRY, clean code).
 
 > Catatan: Tidak ada backend nyata pada scope test ini. Login menerima email
 > valid + kata sandi minimal 4 karakter (mock, dengan delay untuk simulasi
-> network call). Harga emas & saldo disimpan di memori (React state), reset
-> setiap kali aplikasi dibuka ulang.
+> network call). Harga emas & saldo disimpan di memori (Zustand store),
+> reset setiap kali aplikasi dibuka ulang.
 
 ## Menjalankan Aplikasi
 
@@ -83,14 +87,14 @@ EAS setelah proses build selesai.
 ```
 src/
   app/
-    _layout.tsx      # Root stack + AuthProvider/GoldProvider
+    _layout.tsx      # Root stack, mendaftarkan screen + memicu price ticker
     index.tsx         # Redirect awal berdasarkan status login
     login.tsx          # Halaman Login
-    dashboard.tsx       # Halaman Dashboard
-    beli-emas.tsx        # Halaman Beli Emas
-  context/
-    auth-context.tsx
-    gold-context.tsx
+    dashboard.tsx        # Halaman Dashboard
+    buy-gold.tsx           # Halaman Beli Emas
+  store/
+    auth-store.ts        # Zustand store: status login, login()/logout()
+    gold-store.ts          # Zustand store: saldo, harga, buyGold(), price ticker
   utils/
     format.ts
   components/          # Komponen UI dasar (ThemedText, ThemedView, dll.)
