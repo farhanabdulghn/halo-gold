@@ -1,8 +1,42 @@
-# Welcome to your Expo app 👋
+# HaloGold — Mobile Technical Test
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplikasi mobile sederhana (React Native + Expo Router) yang mengimplementasikan
+sebagian alur dari **Business Requirement Document (BRD) HaloGold**, sesuai
+scope technical test: **Login → Dashboard → Beli Emas**.
 
-## Get started
+## Fitur
+
+| Halaman       | Deskripsi                                                                                                         | Referensi BRD                  |
+| ------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| **Login**     | Form email + kata sandi dengan validasi sederhana                                                                 | FR-003                         |
+| **Dashboard** | Saldo emas (gram & estimasi Rupiah), harga emas realtime (disimulasikan berubah setiap 5 detik), tombol Beli Emas | FR-005, FR-006                 |
+| **Beli Emas** | Input nominal Rupiah, kalkulasi gram otomatis, quick-amount chip, tombol Konfirmasi yang menambah saldo           | FR-009, FR-010, FR-011, FR-012 |
+
+Sesuai instruksi test case, halaman **payment, profile, dan riwayat transaksi
+tidak diimplementasikan**.
+
+## Arsitektur & State Management
+
+- **Expo Router** (file-based routing) — `src/app/_layout.tsx`, `login.tsx`,
+  `dashboard.tsx`, `beli-emas.tsx`.
+- **React Context** untuk state management, dipisah per domain agar clean dan
+  mudah di-test:
+  - `src/context/auth-context.tsx` — status login, mock `login()`/`logout()`.
+  - `src/context/gold-context.tsx` — saldo emas, harga realtime (simulasi),
+    dan aksi `buyGold(nominal)` yang mengunci harga saat transaksi (mirip
+    FR-012 "Lock harga").
+- **Route guard**: `dashboard.tsx` dan `beli-emas.tsx` melakukan redirect ke
+  `/login` bila user belum login (lihat penggunaan `<Redirect />` dari
+  `expo-router`).
+- `src/utils/format.ts` — helper format Rupiah & gram, dipakai bersama di
+  seluruh halaman (DRY, clean code).
+
+> Catatan: Tidak ada backend nyata pada scope test ini. Login menerima email
+> valid + kata sandi minimal 4 karakter (mock, dengan delay untuk simulasi
+> network call). Harga emas & saldo disimpan di memori (React state), reset
+> setiap kali aplikasi dibuka ulang.
+
+## Menjalankan Aplikasi
 
 1. Install dependencies
 
@@ -10,47 +44,60 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install
    ```
 
-2. Start the app
+2. Jalankan development server
 
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+3. Buka di:
+   - **Expo Go** (scan QR code) — cara tercepat untuk mencoba di HP fisik.
+   - **Android emulator** — tekan `a` di terminal, atau `npm run android`.
+   - **iOS simulator** (macOS) — tekan `i` di terminal, atau `npm run ios`.
+   - **Web** — tekan `w` di terminal, atau `npm run web`.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+4. Login menggunakan email apa saja (format valid) dan kata sandi minimal 4
+   karakter, misalnya:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+   ```
+   email: demo@halogold.id
+   password: demo1234
+   ```
 
-## Get a fresh project
+## Build APK (opsional, untuk deliverable)
 
-When you're ready, run:
+Menggunakan [EAS Build](https://docs.expo.dev/build/introduction/):
 
 ```bash
-npm run reset-project
+npm install -g eas-cli
+eas login
+eas build:configure
+eas build -p android --profile preview
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Build preview akan menghasilkan file `.apk` yang bisa diunduh dari dashboard
+EAS setelah proses build selesai.
 
-### Other setup steps
+## Struktur Folder Relevan
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```
+src/
+  app/
+    _layout.tsx      # Root stack + AuthProvider/GoldProvider
+    index.tsx         # Redirect awal berdasarkan status login
+    login.tsx          # Halaman Login
+    dashboard.tsx       # Halaman Dashboard
+    beli-emas.tsx        # Halaman Beli Emas
+  context/
+    auth-context.tsx
+    gold-context.tsx
+  utils/
+    format.ts
+  components/          # Komponen UI dasar (ThemedText, ThemedView, dll.)
+  constants/theme.ts   # Warna, spacing, brand color
+```
 
-## Learn more
+## Sumber
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Dibangun di atas starter [`create-expo-app`](https://www.npmjs.com/package/create-expo-app)
+(Expo SDK 57 / Expo Router).
