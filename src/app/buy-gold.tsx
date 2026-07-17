@@ -1,29 +1,32 @@
-import { Redirect, useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
-import { Alert, Pressable, StyleSheet, TextInput } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Redirect, useRouter } from "expo-router";
+import { useMemo, useState } from "react";
+import { Alert, Pressable, StyleSheet, TextInput } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { BrandColor, MaxContentWidth, Spacing } from '@/constants/theme';
-import { useAuth } from '@/context/auth-context';
-import { MINIMUM_PURCHASE_NOMINAL, useGold } from '@/context/gold-context';
-import { useTheme } from '@/hooks/use-theme';
-import { formatGram, formatRupiah, parseNominalInput } from '@/utils/format';
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { BrandColor, MaxContentWidth, Spacing } from "@/constants/theme";
+import { useAuth } from "@/context/auth-context";
+import { MINIMUM_PURCHASE_NOMINAL, useGold } from "@/context/gold-context";
+import { useTheme } from "@/hooks/use-theme";
+import { formatGram, formatRupiah, parseNominalInput } from "@/utils/format";
 
 const QUICK_AMOUNTS = [50_000, 100_000, 250_000, 500_000];
 
-export default function BeliEmasScreen() {
+export default function BuyGoldScreen() {
   const router = useRouter();
   const theme = useTheme();
   const { isAuthenticated } = useAuth();
   const { pricePerGram, buyGold } = useGold();
 
-  const [rawNominal, setRawNominal] = useState('');
+  const [rawNominal, setRawNominal] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const nominal = parseNominalInput(rawNominal);
-  const gram = useMemo(() => (nominal > 0 ? nominal / pricePerGram : 0), [nominal, pricePerGram]);
+  const gram = useMemo(
+    () => (nominal > 0 ? nominal / pricePerGram : 0),
+    [nominal, pricePerGram],
+  );
 
   // Route guard: buying gold requires an authenticated session.
   // (Declared after all hooks so hook order stays stable across renders.)
@@ -46,18 +49,22 @@ export default function BeliEmasScreen() {
     setIsSubmitting(false);
 
     Alert.alert(
-      'Pembelian Berhasil',
+      "Pembelian Berhasil",
       `Kamu berhasil membeli ${formatGram(transaction.gram)} senilai ${formatRupiah(
-        transaction.nominal
+        transaction.nominal,
       )}.`,
-      [{ text: 'OK', onPress: () => router.replace('/dashboard') }]
+      [{ text: "OK", onPress: () => router.replace("/dashboard") }],
     );
   };
 
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <Pressable onPress={() => router.back()} hitSlop={12} style={styles.backButton}>
+        <Pressable
+          onPress={() => router.back()}
+          hitSlop={12}
+          style={styles.backButton}
+        >
           <ThemedText type="linkPrimary">← Kembali</ThemedText>
         </Pressable>
 
@@ -71,16 +78,20 @@ export default function BeliEmasScreen() {
             Nominal (Rp)
           </ThemedText>
           <TextInput
-            value={nominal ? nominal.toLocaleString('id-ID') : ''}
+            value={nominal ? nominal.toLocaleString("id-ID") : ""}
             onChangeText={handleNominalChange}
             placeholder="0"
             placeholderTextColor={theme.textSecondary}
             keyboardType="number-pad"
-            style={[styles.input, { color: theme.text, borderColor: theme.backgroundSelected }]}
+            style={[
+              styles.input,
+              { color: theme.text, borderColor: theme.backgroundSelected },
+            ]}
           />
           {isBelowMinimum ? (
             <ThemedText type="small" style={styles.warning}>
-              Nominal pembelian minimal {formatRupiah(MINIMUM_PURCHASE_NOMINAL)}.
+              Nominal pembelian minimal {formatRupiah(MINIMUM_PURCHASE_NOMINAL)}
+              .
             </ThemedText>
           ) : null}
         </ThemedView>
@@ -94,7 +105,8 @@ export default function BeliEmasScreen() {
                 styles.quickAmountChip,
                 { backgroundColor: theme.backgroundElement },
                 pressed && styles.quickAmountChipPressed,
-              ]}>
+              ]}
+            >
               <ThemedText type="small">{formatRupiah(amount)}</ThemedText>
             </Pressable>
           ))}
@@ -116,8 +128,11 @@ export default function BeliEmasScreen() {
             styles.confirmButton,
             pressed && styles.confirmButtonPressed,
             !canConfirm && styles.confirmButtonDisabled,
-          ]}>
-          <ThemedText style={styles.confirmButtonText}>Konfirmasi Pembelian</ThemedText>
+          ]}
+        >
+          <ThemedText style={styles.confirmButtonText}>
+            Konfirmasi Pembelian
+          </ThemedText>
         </Pressable>
       </SafeAreaView>
     </ThemedView>
@@ -127,11 +142,11 @@ export default function BeliEmasScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   safeArea: {
     flex: 1,
-    width: '100%',
+    width: "100%",
     maxWidth: MaxContentWidth,
     paddingHorizontal: Spacing.four,
     paddingTop: Spacing.three,
@@ -139,7 +154,7 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
   },
   backButton: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   field: {
     gap: Spacing.two,
@@ -150,14 +165,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.three,
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   warning: {
-    color: '#D64545',
+    color: "#D64545",
   },
   quickAmounts: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: Spacing.two,
   },
   quickAmountChip: {
@@ -179,12 +194,12 @@ const styles = StyleSheet.create({
     lineHeight: 36,
   },
   confirmButton: {
-    marginTop: 'auto',
+    marginTop: "auto",
     backgroundColor: BrandColor,
     borderRadius: Spacing.three,
     paddingVertical: Spacing.three,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   confirmButtonPressed: {
     opacity: 0.85,
@@ -193,8 +208,8 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
   confirmButtonText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

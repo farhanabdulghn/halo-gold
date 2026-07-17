@@ -18,14 +18,14 @@ tidak diimplementasikan**.
 ## Arsitektur & State Management
 
 - **Expo Router** (file-based routing) — `src/app/_layout.tsx`, `login.tsx`,
-  `dashboard.tsx`, `beli-emas.tsx`.
+  `dashboard.tsx`, `buy-gold.tsx`.
 - **React Context** untuk state management, dipisah per domain agar clean dan
   mudah di-test:
   - `src/context/auth-context.tsx` — status login, mock `login()`/`logout()`.
   - `src/context/gold-context.tsx` — saldo emas, harga realtime (simulasi),
     dan aksi `buyGold(nominal)` yang mengunci harga saat transaksi (mirip
     FR-012 "Lock harga").
-- **Route guard**: `dashboard.tsx` dan `beli-emas.tsx` melakukan redirect ke
+- **Route guard**: `dashboard.tsx` dan `buy-gold.tsx` melakukan redirect ke
   `/login` bila user belum login (lihat penggunaan `<Redirect />` dari
   `expo-router`).
 - `src/utils/format.ts` — helper format Rupiah & gram, dipakai bersama di
