@@ -82,6 +82,11 @@ eas build -p android --profile preview
 Build preview akan menghasilkan file `.apk` yang bisa diunduh dari dashboard
 EAS setelah proses build selesai.
 
+Build terbaru dapat dilihat di sini:
+[expo.dev/accounts/farhanabdulghn/projects/halogold/builds/60074339-8027-42ee-abfb-4285e48bf817](https://expo.dev/accounts/farhanabdulghn/projects/halogold/builds/60074339-8027-42ee-abfb-4285e48bf817)
+
+Atau langsung unduh file APK-nya (`application-60074339-8027-42ee-abfb-4285e48bf817.apk`) yang sudah diupload di repo GitHub ini.
+
 ## Struktur Folder Relevan
 
 ```
