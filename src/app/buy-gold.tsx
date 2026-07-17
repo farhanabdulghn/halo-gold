@@ -6,9 +6,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { BrandColor, MaxContentWidth, Spacing } from "@/constants/theme";
-import { useAuth } from "@/context/auth-context";
-import { MINIMUM_PURCHASE_NOMINAL, useGold } from "@/context/gold-context";
 import { useTheme } from "@/hooks/use-theme";
+import { useAuthStore } from "@/store/auth-store";
+import { MINIMUM_PURCHASE_NOMINAL, useGoldStore } from "@/store/gold-store";
 import { formatGram, formatRupiah, parseNominalInput } from "@/utils/format";
 
 const QUICK_AMOUNTS = [50_000, 100_000, 250_000, 500_000];
@@ -16,8 +16,8 @@ const QUICK_AMOUNTS = [50_000, 100_000, 250_000, 500_000];
 export default function BuyGoldScreen() {
   const router = useRouter();
   const theme = useTheme();
-  const { isAuthenticated } = useAuth();
-  const { pricePerGram, buyGold } = useGold();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const { pricePerGram, buyGold } = useGoldStore();
 
   const [rawNominal, setRawNominal] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);

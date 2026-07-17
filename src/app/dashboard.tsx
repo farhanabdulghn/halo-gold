@@ -5,14 +5,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { BrandColor, MaxContentWidth, Spacing } from "@/constants/theme";
-import { useAuth } from "@/context/auth-context";
-import { useGold } from "@/context/gold-context";
+import { useAuthStore } from "@/store/auth-store";
+import { useGoldStore } from "@/store/gold-store";
 import { formatGram, formatRupiah } from "@/utils/format";
 
 export default function DashboardScreen() {
   const router = useRouter();
-  const { isAuthenticated, userEmail, logout } = useAuth();
-  const { balanceGram, pricePerGram } = useGold();
+  const { isAuthenticated, userEmail, logout } = useAuthStore();
+  const { balanceGram, pricePerGram } = useGoldStore();
 
   // Route guard: only authenticated users may view the dashboard.
   if (!isAuthenticated) {

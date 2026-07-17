@@ -1,21 +1,28 @@
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  TextInput,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { BrandColor, MaxContentWidth, Spacing } from '@/constants/theme';
-import { useAuth } from '@/context/auth-context';
-import { useTheme } from '@/hooks/use-theme';
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { BrandColor, MaxContentWidth, Spacing } from "@/constants/theme";
+import { useTheme } from "@/hooks/use-theme";
+import { useAuthStore } from "@/store/auth-store";
 
 export default function LoginScreen() {
   const router = useRouter();
   const theme = useTheme();
-  const { login } = useAuth();
+  const login = useAuthStore((state) => state.login);
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -32,15 +39,16 @@ export default function LoginScreen() {
       return;
     }
 
-    router.replace('/dashboard');
+    router.replace("/dashboard");
   };
 
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          style={styles.form}>
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          style={styles.form}
+        >
           <ThemedView style={styles.brand}>
             <ThemedText type="title" style={styles.brandTitle}>
               HaloGold
@@ -63,7 +71,10 @@ export default function LoginScreen() {
                 autoCapitalize="none"
                 autoComplete="email"
                 keyboardType="email-address"
-                style={[styles.input, { color: theme.text, borderColor: theme.backgroundSelected }]}
+                style={[
+                  styles.input,
+                  { color: theme.text, borderColor: theme.backgroundSelected },
+                ]}
               />
             </ThemedView>
 
@@ -78,7 +89,10 @@ export default function LoginScreen() {
                 placeholderTextColor={theme.textSecondary}
                 secureTextEntry
                 autoComplete="password"
-                style={[styles.input, { color: theme.text, borderColor: theme.backgroundSelected }]}
+                style={[
+                  styles.input,
+                  { color: theme.text, borderColor: theme.backgroundSelected },
+                ]}
               />
             </ThemedView>
 
@@ -96,7 +110,8 @@ export default function LoginScreen() {
               styles.button,
               pressed && styles.buttonPressed,
               isSubmitting && styles.buttonDisabled,
-            ]}>
+            ]}
+          >
             {isSubmitting ? (
               <ActivityIndicator color="#ffffff" />
             ) : (
@@ -104,8 +119,13 @@ export default function LoginScreen() {
             )}
           </Pressable>
 
-          <ThemedText type="small" themeColor="textSecondary" style={styles.centerText}>
-            Gunakan email &amp; kata sandi apa saja (min. 4 karakter) untuk mencoba aplikasi ini.
+          <ThemedText
+            type="small"
+            themeColor="textSecondary"
+            style={styles.centerText}
+          >
+            Gunakan email &amp; kata sandi apa saja (min. 4 karakter) untuk
+            mencoba aplikasi ini.
           </ThemedText>
         </KeyboardAvoidingView>
       </SafeAreaView>
@@ -116,27 +136,27 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   safeArea: {
     flex: 1,
-    width: '100%',
+    width: "100%",
     maxWidth: MaxContentWidth,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingHorizontal: Spacing.five,
   },
   form: {
     gap: Spacing.five,
   },
   brand: {
-    alignItems: 'center',
+    alignItems: "center",
     gap: Spacing.two,
   },
   brandTitle: {
     fontSize: 40,
   },
   centerText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   fields: {
     gap: Spacing.four,
@@ -152,14 +172,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   error: {
-    color: '#D64545',
+    color: "#D64545",
   },
   button: {
     backgroundColor: BrandColor,
     borderRadius: Spacing.three,
     paddingVertical: Spacing.three,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonPressed: {
     opacity: 0.85,
@@ -168,8 +188,8 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   buttonText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

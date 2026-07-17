@@ -1,27 +1,29 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 
-import { AuthProvider } from "@/context/auth-context";
-import { GoldProvider } from "@/context/gold-context";
+import { startGoldPriceTicker } from "@/store/gold-store";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
+  useEffect(() => {
+    startGoldPriceTicker();
+  }, []);
+
   return (
-    <AuthProvider>
-      <GoldProvider>
-        <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="index" />
-          <Stack.Screen name="login" />
-          <Stack.Screen name="dashboard" />
-          <Stack.Screen
-            name="beli-emas"
-            options={{ animation: "slide_from_right" }}
-          />
-        </Stack>
-      </GoldProvider>
-    </AuthProvider>
+    <>
+      <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="login" />
+        <Stack.Screen name="dashboard" />
+        <Stack.Screen
+          name="beli-emas"
+          options={{ animation: "slide_from_right" }}
+        />
+      </Stack>
+    </>
   );
 }
