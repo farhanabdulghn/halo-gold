@@ -1,13 +1,13 @@
-import { Redirect, useRouter } from 'expo-router';
-import { Pressable, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Redirect, useRouter } from "expo-router";
+import { Pressable, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { BrandColor, MaxContentWidth, Spacing } from '@/constants/theme';
-import { useAuth } from '@/context/auth-context';
-import { useGold } from '@/context/gold-context';
-import { formatGram, formatRupiah } from '@/utils/format';
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { BrandColor, MaxContentWidth, Spacing } from "@/constants/theme";
+import { useAuth } from "@/context/auth-context";
+import { useGold } from "@/context/gold-context";
+import { formatGram, formatRupiah } from "@/utils/format";
 
 export default function DashboardScreen() {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function DashboardScreen() {
 
   const handleLogout = () => {
     logout();
-    router.replace('/login');
+    router.replace("/login");
   };
 
   return (
@@ -50,7 +50,9 @@ export default function DashboardScreen() {
           <ThemedText type="title" style={styles.balanceGram}>
             {formatGram(balanceGram)}
           </ThemedText>
-          <ThemedText themeColor="textSecondary">≈ {formatRupiah(balanceValue)}</ThemedText>
+          <ThemedText themeColor="textSecondary">
+            ≈ {formatRupiah(balanceValue)}
+          </ThemedText>
         </ThemedView>
 
         <ThemedView type="backgroundElement" style={styles.priceCard}>
@@ -64,8 +66,12 @@ export default function DashboardScreen() {
         </ThemedView>
 
         <Pressable
-          onPress={() => router.push('/beli-emas')}
-          style={({ pressed }) => [styles.buyButton, pressed && styles.buyButtonPressed]}>
+          onPress={() => router.push("/buy-gold")}
+          style={({ pressed }) => [
+            styles.buyButton,
+            pressed && styles.buyButtonPressed,
+          ]}
+        >
           <ThemedText style={styles.buyButtonText}>Beli Emas</ThemedText>
         </Pressable>
       </SafeAreaView>
@@ -76,11 +82,11 @@ export default function DashboardScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   safeArea: {
     flex: 1,
-    width: '100%',
+    width: "100%",
     maxWidth: MaxContentWidth,
     paddingHorizontal: Spacing.four,
     paddingTop: Spacing.four,
@@ -88,9 +94,9 @@ const styles = StyleSheet.create({
     gap: Spacing.four,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   balanceCard: {
     borderRadius: Spacing.four,
@@ -107,19 +113,19 @@ const styles = StyleSheet.create({
     gap: Spacing.one,
   },
   buyButton: {
-    marginTop: 'auto',
+    marginTop: "auto",
     backgroundColor: BrandColor,
     borderRadius: Spacing.three,
     paddingVertical: Spacing.three,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   buyButtonPressed: {
     opacity: 0.85,
   },
   buyButtonText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
